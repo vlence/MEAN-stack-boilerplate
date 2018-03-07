@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const commentsRoute = require('./routes/comments');
 const app = express();
 
-const url = 'mongodb://localhost:27017/test';
+const url = 'mongodb://localhost:27017/test1';
 
 // Use this to serve static content
 app.use(express.static('public'));
