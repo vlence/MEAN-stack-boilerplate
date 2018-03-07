@@ -9,21 +9,35 @@
   <script src="/angular.js"></script>
 </head>
 <body>
-  <div ng-app="demo" class ="container-fluid">
+  <div ng-app="demo" class ="container">
     <div ng-controller="DemoCtrl as ctrl">
 
-      <div class = "row justify-content-md-center">
-          <input type = "text" ng-model="ctrl.text" placeholder = "comment" ng-required="">
-          <button ng-click="ctrl.addComment()">Post</button>
-      </div>
+      <h1>Comments!</h1>
       
-      <div class = "row justify-content-md-center">
-          <ul>
-            <li ng-repeat="comment in ctrl.comments">
-              {{ comment.comment }}
-            </li>
-          </ul>  
+      <div>
+        <ul>
+          <li ng-repeat="comment in ctrl.comments">
+            {{ comment.comment }} <br>
+            - <i>{{ comment.name }}</i>
+          </li>
+        </ul>  
       </div>
+
+      <!-- Using a form instead so we can just use the ENTER key -->
+      <form ng-submit="ctrl.onSubmit($event)">
+
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Name" ng-model="ctrl.name" required>
+        </div>
+
+        <div class="form-group">
+          <textarea class="form-control" ng-model="ctrl.text" placeholder="Comment" required></textarea>
+        </div>
+
+        <!-- Gave this button type="submit" so that clicking and ENTER key are same -->
+        <button class="btn btn-primary" type="submit">Post</button>
+      </form>
+
     </div>
   </div>
 
@@ -31,16 +45,38 @@
     angular.module('demo', [])
       .controller('DemoCtrl', ['$http', function($http) {
         const _self = this;
-        // _self.name ='';
-        _self.text = '';
+
+        _self.name     = '';
+        _self.text     = '';
+
         _self.comments = [];
 
+
+        /**
+         * Adds a comment when the form is submitted
+         * 
+         * @param {FormSubmitEvent} e The form submit event
+         */
+        _self.onSubmit = function(e) {
+          // If we don't do this the browser will refresh
+          e.preventDefault();
+          // Add the comment
+          _self.addComment();
+        };
+
+
+        /**
+         * Executed once when the component is instantiated
+         */
         _self.$onInit = function() {
-          // Executed once when the controller is instantiated
+          // Get a list of existing comments
           _self.getComments();
-          // _self.getNames();
         }
         
+
+        /**
+         * Gets a list of all comments from the db
+         */
         _self.getComments = function() {
           $http.get('/comments')
             .then(function(response) {
@@ -49,21 +85,26 @@
             .catch(function(response) {
               console.error(response.data);
             })
-        }
+        };
         
+        /**
+         * Commits a comment to the db
+         */
         _self.addComment = function() {
-          $http.post('/comments', { comment: _self.text})
+          $http.post('/comments', { comment: _self.text, name: _self.name })
             .then(function(response) {
               console.log(response.data);
-              _self.text = '';
-              // _self.name = '';
 
+              _self.text = '';
+              _self.name = '';
+
+              // Re-render the list of comments
               _self.getComments();
             })
             .catch(function(response) {
-              console.error(response)
-            })
-        }
+              console.error(response.data)
+            });
+        };
       }])
   </script>
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

@@ -32,9 +32,10 @@ router.get('/:id', function(request, response) {
 });
 
 router.post('/', function(request, response) {
+  const name    = request.body.name;
   const comment = request.body.comment;
 
-  Comments.create({ comment: comment })
+  Comments.create({ comment: comment, name: name })
     .then(function(comment) {
       response.json(comment);
     })
