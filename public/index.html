@@ -1,0 +1,69 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+
+  <script src="/angular.js"></script>
+</head>
+<body>
+  <!-- Root element of the app -->
+  <div ng-app="demo">
+    <!-- instantiate a controller -->
+    <div ng-controller="DemoCtrl as ctrl">
+      <!-- <input type="text" ng-model="ctrl.name" placeholder ="name"> -->
+      <input type = "text" ng-model="ctrl.text" placeholder = "comment">
+      <button ng-click="ctrl.addComment()">Post</button>
+      <ul>
+        <!-- Loop through the names -->
+        <li ng-repeat="comment in ctrl.comments">
+          {{ comment.comment }}
+        </li>
+      </ul>
+
+      
+    </div>
+  </div>
+
+  <script>
+    angular.module('demo', [])
+      .controller('DemoCtrl', ['$http', function($http) {
+        const _self = this;
+        // _self.name ='';
+        _self.text = '';
+        _self.comments = [];
+
+        _self.$onInit = function() {
+          // Executed once when the controller is instantiated
+          _self.getComments();
+          // _self.getNames();
+        }
+        
+        _self.getComments = function() {
+          $http.get('/comments')
+            .then(function(response) {
+              _self.comments = response.data;
+            })
+            .catch(function(response) {
+              console.error(response.data);
+            })
+        }
+        
+        _self.addComment = function() {
+          $http.post('/comments', { comment: _self.text})
+            .then(function(response) {
+              console.log(response.data);
+              _self.text = '';
+              // _self.name = '';
+
+              _self.getComments();
+            })
+            .catch(function(response) {
+              console.error(response)
+            })
+        }
+      }])
+  </script>
+</body>
+</html>

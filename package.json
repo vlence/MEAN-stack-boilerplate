@@ -1,0 +1,26 @@
+{
+  "dependencies": {
+    "angular": "^1.6.9",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "mongoose": "^5.0.9"
+  },
+  "name": "mean-stack-boilerplate",
+  "description": "a simple REST application to store comments",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mawlong/MEAN-stack-boilerplate.git"
+  },
+  "author": "Leon Patrick Mawlong",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Mawlong/MEAN-stack-boilerplate/issues"
+  },
+  "homepage": "https://github.com/Mawlong/MEAN-stack-boilerplate#readme"
+}
